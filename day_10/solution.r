@@ -1,5 +1,5 @@
 si <- file("stdin")
-input <- readLines(si, n=1)
+lines <- readLines(si)
 close(si)
 
 max <- 256
@@ -49,11 +49,14 @@ condence <- function(v) {
 	x
 }
 
-numbers <- as.numeric(strsplit(input, ",")[[1]])
-v <- rounds(numbers, 1)
-write(prod(v[1:2]), "")
+for (input in lines) {
+	numbers <- suppressWarnings(as.numeric(strsplit(input, ",")[[1]]))
+	if (!any(is.na(numbers))) {
+		v <- rounds(numbers, 1)
+		write(prod(v[1:2]), "")
+	}
 
-bytes <- c(charToRaw(input), 17, 31, 73, 47, 23)
-v <- rounds(bytes, 64)
-hash <- condence(v)
-write(cat(format(as.hexmode(hash), width=2), sep=""), "")
+	bytes <- c(charToRaw(input), 17, 31, 73, 47, 23)
+	hash <- condence(rounds(bytes, 64))
+	write(cat(format(as.hexmode(hash), width=2), sep=""), "")
+}
