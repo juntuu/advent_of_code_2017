@@ -1,0 +1,61 @@
+%!PS
+
+/input (%stdin) (r) file def
+/zero (0) 0 get def
+/newline (\n) 0 get def
+
+%  - number int bool
+/number {
+	0
+	{
+		input read {
+			dup zero lt { exit } if
+			zero sub exch 10 mul add
+		} { newline exit } ifelse
+	} loop
+	newline ne
+} def
+
+/min {{ gt } impl } def
+/max {{ lt } impl } def
+
+/impl {
+	exch dup 0 get exch {
+		2 copy 4 index exec {
+			exch
+		} if
+		pop
+	} forall
+	exch pop
+} def
+
+% int int divides int int bool
+/divides { 2 copy 2 copy ne 3 1 roll mod 0 eq and } def
+
+/part1 0 def
+/part2 0 def
+
+{
+	[ { number not { exit } if } loop ]  % read line of input to int array
+	dup length 1 eq { pop exit } if   % we get [0] at the end of input
+
+	dup dup max exch min sub part1 add
+	/part1 exch store
+
+	dup {
+		1 index {
+			divides {
+				2 copy idiv part2 add
+				/part2 exch store
+			} if
+			pop
+		} forall
+		pop
+	} forall
+	pop
+} loop
+
+part1 ==
+part2 ==
+
+quit
