@@ -39,44 +39,34 @@ solve:
 	cbnz	w0, part2
 	b	main_loop
 part2:
-	mov	w0, #0  ; reset to 0 for correct count (will be simplified)
-	add	w0, w0, #1
+	mov	w0, #1  ; reset to 1 accounting for the following mul
 	mul	x8, x8, x14
 	sub	x8, x8, x16
-	mov	x9, x8
-	sub	x9, x9, x15
+	sub	x9, x8, x15
 main_loop:
 	mov	x12, #1
 	mov	x10, #2
 loop1:
 	mov	x11, #2
 loop2:
-	mov	x13, x10
 	add	w0, w0, #1
-	mul	x13, x13, x11
+	mul	x13, x10, x11
 	sub	x13, x13, x8
 	cbnz	x13, else
 	mov	x12, #0
 else:
 	sub	x11, x11, #-1
-	mov	x13, x11
-	sub	x13, x13, x8
+	sub	x13, x11, x8
 	cbnz	x13, loop2
 	sub	x10, x10, #-1
-	mov	x13, x10
-	sub	x13, x13, x8
+	sub	x13, x10, x8
 	cbnz	x13, loop1
 	cbnz	x12, no_inc
 	sub	w1, w1, #-1
 no_inc:
-	mov	x13, x8
-	sub	x13, x13, x9
-	cbnz	x13, more
-	b	end
-more:
+	sub	x13, x8, x9
 	sub	x8, x8, #-17
-	b	main_loop
-end:
+	cbnz	x13, main_loop
 	ret
 
 .global	_main
