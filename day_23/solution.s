@@ -58,7 +58,8 @@ loop2:  ; x11 = 2..x8
 	mul	x13, x10, x11
 	sub	x13, x13, x8
 	cbnz	x13, else
-	b	no_inc
+	add	w1, w1, #1
+	b	break
 else:
 	add	x11, x11, #1
 	sub	x13, x11, x8
@@ -66,9 +67,7 @@ else:
 	add	x10, x10, #1
 	sub	x13, x10, x8
 	cbnz	x13, loop1
-	cbnz	x12, no_inc
-	add	w1, w1, #1
-no_inc:
+break:
 	sub	x13, x8, x9
 	add	x8, x8, #17
 	cbnz	x13, main_loop
