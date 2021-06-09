@@ -44,26 +44,18 @@ part2:
 	sub	x8, x8, x16
 	sub	x9, x8, x15
 main_loop:
-	mov	x12, #1
-	mov	x10, #2
-
 	; calculate #mul instructions in inner loops
 	sub	x14, x8, #2
-	mul	x14, x14, x14
-	add	x0, x0, x14
+	madd	x0, x14, x14, x0
 
+	mov	x10, #2
 loop1:  ; x10 = 2..x8
-	mov	x11, #2
-loop2:  ; x11 = 2..x8
-	mul	x13, x10, x11
-	sub	x13, x13, x8
+	sdiv	x13, x8, x10       ; a = ⌊x / b⌋
+	msub	x13, x13, x10, x8  ; x - (a * b) = 0 ⇒ x % b = 0
 	cbnz	x13, else
 	add	w1, w1, #1
 	b	break
 else:
-	add	x11, x11, #1
-	sub	x13, x11, x8
-	cbnz	x13, loop2
 	add	x10, x10, #1
 	sub	x13, x10, x8
 	cbnz	x13, loop1
