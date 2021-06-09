@@ -46,26 +46,31 @@ part2:
 main_loop:
 	mov	x12, #1
 	mov	x10, #2
-loop1:
+
+	; calculate #mul instructions in inner loops
+	sub	x14, x8, #2
+	mul	x14, x14, x14
+	add	x0, x0, x14
+
+loop1:  ; x10 = 2..x8
 	mov	x11, #2
-loop2:
-	add	w0, w0, #1
+loop2:  ; x11 = 2..x8
 	mul	x13, x10, x11
 	sub	x13, x13, x8
 	cbnz	x13, else
-	mov	x12, #0
+	b	no_inc
 else:
-	sub	x11, x11, #-1
+	add	x11, x11, #1
 	sub	x13, x11, x8
 	cbnz	x13, loop2
-	sub	x10, x10, #-1
+	add	x10, x10, #1
 	sub	x13, x10, x8
 	cbnz	x13, loop1
 	cbnz	x12, no_inc
-	sub	w1, w1, #-1
+	add	w1, w1, #1
 no_inc:
 	sub	x13, x8, x9
-	sub	x8, x8, #-17
+	add	x8, x8, #17
 	cbnz	x13, main_loop
 	ret
 
